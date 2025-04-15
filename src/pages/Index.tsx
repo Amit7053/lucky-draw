@@ -4,12 +4,15 @@ import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import Dice from '@/components/Dice';
 import History from '@/components/History';
+import { useAuth } from '@/contexts/AuthContext';
+import { LogOut } from 'lucide-react';
 
 const Index = () => {
   const [diceValue, setDiceValue] = useState(1);
   const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState<number[]>([]);
   const { toast } = useToast();
+  const { signOut, user } = useAuth();
 
   const rollDice = useCallback(() => {
     if (isRolling) return;
@@ -29,9 +32,19 @@ const Index = () => {
   }, [isRolling, toast]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-lottery-darkPurple/20 to-lottery-purple/20 p-4">
-      <div className="max-w-md mx-auto pt-10">
-        <h1 className="text-4xl font-bold text-center mb-8 text-lottery-gold">Lucky Dice</h1>
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-yellow-300 p-4">
+      <div className="max-w-md mx-auto pt-6">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-yellow-800">Lucky Dice</h1>
+          <Button 
+            variant="ghost" 
+            className="text-yellow-800 hover:text-yellow-900"
+            onClick={signOut}
+          >
+            <LogOut className="w-5 h-5 mr-2" />
+            Logout
+          </Button>
+        </div>
         
         <div className="flex flex-col items-center gap-8">
           <Dice value={diceValue} isRolling={isRolling} />
@@ -39,7 +52,7 @@ const Index = () => {
           <Button 
             onClick={rollDice}
             disabled={isRolling}
-            className="bg-lottery-gold hover:bg-lottery-gold/80 text-lottery-darkPurple font-bold text-lg px-8 py-6"
+            className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-lg px-8 py-6 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
           >
             {isRolling ? 'Rolling...' : 'Roll Dice'}
           </Button>
