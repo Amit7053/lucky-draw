@@ -1,7 +1,8 @@
 
 import React, { useState, useCallback } from 'react';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Dice from '@/components/Dice';
 import History from '@/components/History';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,15 +14,15 @@ const Index = () => {
   const [diceValue, setDiceValue] = useState(1);
   const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState<number[]>([]);
+  const [betAmount, setBetAmount] = useState(5);
   const { toast } = useToast();
-  const { signOut, user } = useAuth();
+  const { signOut } = useAuth();
   const { placeBet } = useWallet();
 
   const rollDice = useCallback(async () => {
     if (isRolling) return;
     
-    // Place bet of 5 rupees
-    const betPlaced = await placeBet(5);
+    const betPlaced = await placeBet(betAmount);
     if (!betPlaced) return;
     
     setIsRolling(true);
@@ -36,7 +37,7 @@ const Index = () => {
         description: `You rolled a ${newValue}!`,
       });
     }, 1000);
-  }, [isRolling, toast, placeBet]);
+  }, [isRolling, toast, placeBet, betAmount]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-yellow-300 p-4">
@@ -59,12 +60,23 @@ const Index = () => {
         <div className="flex flex-col items-center gap-8">
           <Dice value={diceValue} isRolling={isRolling} />
           
+          <div className="w-full max-w-xs">
+            <Input
+              type="number"
+              min="1"
+              value={betAmount}
+              onChange={(e) => setBetAmount(Math.max(1, parseInt(e.target.value) || 0))}
+              className="mb-4"
+              placeholder="Enter bet amount"
+            />
+          </div>
+          
           <Button 
             onClick={rollDice}
             disabled={isRolling}
             className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-lg px-8 py-6 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
           >
-            {isRolling ? 'Rolling...' : 'Roll Dice (₹5)'}
+            {isRolling ? 'Rolling...' : `Roll Dice (₹${betAmount})`}
           </Button>
 
           <History rolls={history} />
