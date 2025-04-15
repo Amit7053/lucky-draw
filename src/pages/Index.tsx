@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import Dice from '@/components/Dice';
 import History from '@/components/History';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWallet } from '@/contexts/WalletContext';
 import { LogOut } from 'lucide-react';
+import WalletComponent from '@/components/Wallet';
 
 const Index = () => {
   const [diceValue, setDiceValue] = useState(1);
@@ -13,9 +15,14 @@ const Index = () => {
   const [history, setHistory] = useState<number[]>([]);
   const { toast } = useToast();
   const { signOut, user } = useAuth();
+  const { placeBet } = useWallet();
 
-  const rollDice = useCallback(() => {
+  const rollDice = useCallback(async () => {
     if (isRolling) return;
+    
+    // Place bet of 5 rupees
+    const betPlaced = await placeBet(5);
+    if (!betPlaced) return;
     
     setIsRolling(true);
     const newValue = Math.floor(Math.random() * 6) + 1;
@@ -29,21 +36,24 @@ const Index = () => {
         description: `You rolled a ${newValue}!`,
       });
     }, 1000);
-  }, [isRolling, toast]);
+  }, [isRolling, toast, placeBet]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-yellow-300 p-4">
       <div className="max-w-md mx-auto pt-6">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-yellow-800">Lucky Dice</h1>
-          <Button 
-            variant="ghost" 
-            className="text-yellow-800 hover:text-yellow-900"
-            onClick={signOut}
-          >
-            <LogOut className="w-5 h-5 mr-2" />
-            Logout
-          </Button>
+          <div className="flex gap-2">
+            <WalletComponent />
+            <Button 
+              variant="ghost" 
+              className="text-yellow-800 hover:text-yellow-900"
+              onClick={signOut}
+            >
+              <LogOut className="w-5 h-5 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
         
         <div className="flex flex-col items-center gap-8">
@@ -54,7 +64,7 @@ const Index = () => {
             disabled={isRolling}
             className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold text-lg px-8 py-6 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
           >
-            {isRolling ? 'Rolling...' : 'Roll Dice'}
+            {isRolling ? 'Rolling...' : 'Roll Dice (₹5)'}
           </Button>
 
           <History rolls={history} />
