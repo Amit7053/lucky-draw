@@ -9,7 +9,7 @@ interface DiceProps {
 
 const Dice: React.FC<DiceProps> = ({ value, isRolling }) => {
   const getDiceIcon = () => {
-    const props = { size: 60, className: "text-white" };
+    const props = { size: 60, className: "text-blue-100" };
     switch (value) {
       case 1: return <Dice1 {...props} />;
       case 2: return <Dice2 {...props} />;
@@ -22,7 +22,7 @@ const Dice: React.FC<DiceProps> = ({ value, isRolling }) => {
   };
 
   return (
-    <div className={`p-4 rounded-lg bg-gradient-to-br from-red-600 to-red-800 backdrop-blur-sm border border-red-500/30 shadow-xl
+    <div className={`p-4 rounded-lg bg-gradient-to-br from-purple-600 to-blue-800 backdrop-blur-sm border border-blue-400/30 shadow-xl
       ${isRolling ? 'animate-dice-roll' : 'transition-transform hover:scale-105'}`}>
       {getDiceIcon()}
     </div>

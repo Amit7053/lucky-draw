@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +18,17 @@ const Index = () => {
   const [betAmount, setBetAmount] = useState(5);
   const { toast } = useToast();
   const { signOut } = useAuth();
-  const { placeBet } = useWallet();
+  const { placeBet, refreshBalance } = useWallet();
+  
+  // Ensure wallet is up to date
+  useEffect(() => {
+    refreshBalance();
+  }, [refreshBalance]);
+
+  const handleSignOut = () => {
+    console.log("Signing out...");
+    signOut();
+  };
 
   const rollDice = useCallback(async () => {
     if (isRolling) return;
@@ -42,10 +52,24 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1A1F2C] to-[#403E43] p-4 relative overflow-hidden">
-      {/* Background pattern */}
+      {/* Gaming background images */}
       <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 -right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-20 left-1/3 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
+      </div>
       
-      <div className="max-w-md mx-auto pt-6">
+      {/* Gaming circuit lines */}
+      <div className="absolute inset-0" style={{
+        backgroundImage: `
+          linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px)
+        `,
+        backgroundSize: '30px 30px'
+      }}></div>
+      
+      <div className="max-w-md mx-auto pt-6 relative z-10">
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center">
             <div className="w-16 h-16 rounded-full overflow-hidden shadow-lg border-2 border-white/20">
@@ -61,7 +85,7 @@ const Index = () => {
             <Button 
               variant="ghost" 
               className="text-white/90 hover:text-white"
-              onClick={() => signOut()}
+              onClick={handleSignOut}
             >
               <LogOut className="w-5 h-5 mr-2" />
               Logout
@@ -69,10 +93,15 @@ const Index = () => {
           </div>
         </div>
         
-        <div className="flex flex-col items-center gap-8 glass p-8 rounded-2xl backdrop-blur-lg border border-white/10">
-          <Dice value={diceValue} isRolling={isRolling} />
+        <div className="flex flex-col items-center gap-8 glass p-8 rounded-2xl backdrop-blur-lg border border-white/10 relative">
+          {/* Glowing effect */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5"></div>
           
-          <div className="w-full max-w-xs">
+          <div className="relative z-10">
+            <Dice value={diceValue} isRolling={isRolling} />
+          </div>
+          
+          <div className="w-full max-w-xs relative z-10">
             <Input
               type="number"
               min="1"
@@ -86,12 +115,14 @@ const Index = () => {
           <Button 
             onClick={rollDice}
             disabled={isRolling}
-            className="bg-green-600 hover:bg-green-700 text-white font-bold text-lg px-8 py-6 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+            className="bg-green-600 hover:bg-green-700 text-white font-bold text-lg px-8 py-6 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all relative z-10"
           >
             {isRolling ? 'Rolling...' : `Roll Dice (₹${betAmount})`}
           </Button>
 
-          <History rolls={history} />
+          <div className="relative z-10 w-full">
+            <History rolls={history} />
+          </div>
         </div>
       </div>
     </div>
