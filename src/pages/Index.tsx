@@ -48,18 +48,20 @@ const Index = () => {
       <div className="max-w-md mx-auto pt-6">
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center">
-            <Image 
-              src="/lovable-uploads/7df5a136-61a4-44f2-9ee5-f2450d605dac.png" 
-              alt="Picker Logo" 
-              className="w-16 h-16 rounded-full shadow-lg border-2 border-white/20"
-            />
+            <div className="w-16 h-16 rounded-full overflow-hidden shadow-lg border-2 border-white/20">
+              <Image 
+                src="/lovable-uploads/7df5a136-61a4-44f2-9ee5-f2450d605dac.png" 
+                alt="Picker Logo" 
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
           <div className="flex gap-2">
             <WalletComponent />
             <Button 
               variant="ghost" 
               className="text-white/90 hover:text-white"
-              onClick={signOut}
+              onClick={() => signOut()}
             >
               <LogOut className="w-5 h-5 mr-2" />
               Logout
@@ -84,7 +86,7 @@ const Index = () => {
           <Button 
             onClick={rollDice}
             disabled={isRolling}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg px-8 py-6 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+            className="bg-green-600 hover:bg-green-700 text-white font-bold text-lg px-8 py-6 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
           >
             {isRolling ? 'Rolling...' : `Roll Dice (₹${betAmount})`}
           </Button>

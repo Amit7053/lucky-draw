@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6 } from 'lucide-react';
 
@@ -8,7 +9,7 @@ interface DiceProps {
 
 const Dice: React.FC<DiceProps> = ({ value, isRolling }) => {
   const getDiceIcon = () => {
-    const props = { size: 80, className: "text-yellow-600" };
+    const props = { size: 60, className: "text-white" };
     switch (value) {
       case 1: return <Dice1 {...props} />;
       case 2: return <Dice2 {...props} />;
@@ -21,7 +22,7 @@ const Dice: React.FC<DiceProps> = ({ value, isRolling }) => {
   };
 
   return (
-    <div className={`p-8 rounded-xl bg-white/90 backdrop-blur-lg border-2 border-yellow-600/30 shadow-xl
+    <div className={`p-4 rounded-lg bg-gradient-to-br from-red-600 to-red-800 backdrop-blur-sm border border-red-500/30 shadow-xl
       ${isRolling ? 'animate-dice-roll' : 'transition-transform hover:scale-105'}`}>
       {getDiceIcon()}
     </div>
