@@ -3,6 +3,13 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Dice from '@/components/Dice';
 import History from '@/components/History';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,6 +23,7 @@ const Index = () => {
   const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState<number[]>([]);
   const [betAmount, setBetAmount] = useState(5);
+  const [selectedNumber, setSelectedNumber] = useState("1");
   const { toast } = useToast();
   const { signOut } = useAuth();
   const { placeBet, refreshBalance } = useWallet();
@@ -37,7 +45,7 @@ const Index = () => {
     if (!betPlaced) return;
     
     setIsRolling(true);
-    const newValue = Math.floor(Math.random() * 6) + 1;
+    const newValue = parseInt(selectedNumber);
     
     setTimeout(() => {
       setDiceValue(newValue);
@@ -48,7 +56,7 @@ const Index = () => {
         description: `You rolled a ${newValue}!`,
       });
     }, 1000);
-  }, [isRolling, toast, placeBet, betAmount]);
+  }, [isRolling, toast, placeBet, betAmount, selectedNumber]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1A1F2C] to-[#403E43] p-4 relative overflow-hidden">
@@ -84,7 +92,7 @@ const Index = () => {
             <WalletComponent />
             <Button 
               variant="ghost" 
-              className="text-white/90 hover:text-white"
+              className="text-white/90 hover:bg-white/20 hover:text-white transition-colors"
               onClick={handleSignOut}
             >
               <LogOut className="w-5 h-5 mr-2" />
@@ -101,7 +109,27 @@ const Index = () => {
             <Dice value={diceValue} isRolling={isRolling} />
           </div>
           
-          <div className="w-full max-w-xs relative z-10">
+          <div className="w-full max-w-xs space-y-4 relative z-10">
+            <Select
+              value={selectedNumber}
+              onValueChange={setSelectedNumber}
+            >
+              <SelectTrigger className="w-full mb-4 bg-white/10 border-white/20 text-white">
+                <SelectValue placeholder="Select number" />
+              </SelectTrigger>
+              <SelectContent className="bg-[#232733] border-white/10">
+                {[1, 2, 3, 4, 5, 6].map((number) => (
+                  <SelectItem
+                    key={number}
+                    value={number.toString()}
+                    className="text-white hover:bg-white/10"
+                  >
+                    Number {number}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
             <Input
               type="number"
               min="1"
