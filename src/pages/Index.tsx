@@ -3,18 +3,11 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import Dice from '@/components/Dice';
 import History from '@/components/History';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/contexts/WalletContext';
-import { LogOut } from 'lucide-react';
+import { LogOut, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6 } from 'lucide-react';
 import WalletComponent from '@/components/Wallet';
 import Image from '@/components/ui/image';
 
@@ -57,6 +50,19 @@ const Index = () => {
       });
     }, 1000);
   }, [isRolling, toast, placeBet, betAmount, selectedNumber]);
+
+  // Number icon mapping for the circular buttons
+  const getNumberIcon = (number: number) => {
+    switch (number) {
+      case 1: return <Circle1 size={18} />;
+      case 2: return <Circle2 size={18} />;
+      case 3: return <Circle3 size={18} />;
+      case 4: return <Circle4 size={18} />;
+      case 5: return <Circle5 size={18} />;
+      case 6: return <Circle6 size={18} />;
+      default: return <Circle1 size={18} />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1A1F2C] to-[#403E43] p-4 relative overflow-hidden">
@@ -109,44 +115,43 @@ const Index = () => {
             <Dice value={diceValue} isRolling={isRolling} />
           </div>
           
-          <div className="w-full max-w-xs space-y-4 relative z-10">
-            <Select
-              value={selectedNumber}
-              onValueChange={setSelectedNumber}
-            >
-              <SelectTrigger className="w-full mb-4 bg-white/10 border-white/20 text-white">
-                <SelectValue placeholder="Select number" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#232733] border-white/10">
-                {[1, 2, 3, 4, 5, 6].map((number) => (
-                  <SelectItem
-                    key={number}
-                    value={number.toString()}
-                    className="text-white hover:bg-white/10"
-                  >
-                    Number {number}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex gap-4 relative z-10">
+            {/* Number selection circles column */}
+            <div className="flex flex-col gap-2 items-center">
+              <p className="text-white/80 text-xs mb-1">Pick</p>
+              {[1, 2, 3, 4, 5, 6].map((number) => (
+                <button
+                  key={number}
+                  onClick={() => setSelectedNumber(number.toString())}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200
+                    ${selectedNumber === number.toString() 
+                      ? 'bg-gradient-to-br from-purple-600 to-blue-700 text-white shadow-lg scale-110' 
+                      : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
+                >
+                  {getNumberIcon(number)}
+                </button>
+              ))}
+            </div>
             
-            <Input
-              type="number"
-              min="1"
-              value={betAmount}
-              onChange={(e) => setBetAmount(Math.max(1, parseInt(e.target.value) || 0))}
-              className="mb-4 bg-white/10 border-white/20 text-white"
-              placeholder="Enter bet amount"
-            />
+            <div className="w-full max-w-xs space-y-4">
+              <Input
+                type="number"
+                min="1"
+                value={betAmount}
+                onChange={(e) => setBetAmount(Math.max(1, parseInt(e.target.value) || 0))}
+                className="mb-4 bg-white/10 border-white/20 text-white"
+                placeholder="Enter bet amount"
+              />
+              
+              <Button 
+                onClick={rollDice}
+                disabled={isRolling}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold text-lg px-8 py-6 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+              >
+                {isRolling ? 'Rolling...' : `Roll Dice (₹${betAmount})`}
+              </Button>
+            </div>
           </div>
-          
-          <Button 
-            onClick={rollDice}
-            disabled={isRolling}
-            className="bg-green-600 hover:bg-green-700 text-white font-bold text-lg px-8 py-6 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all relative z-10"
-          >
-            {isRolling ? 'Rolling...' : `Roll Dice (₹${betAmount})`}
-          </Button>
 
           <div className="relative z-10 w-full">
             <History rolls={history} />
