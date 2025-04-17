@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -24,6 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         
+        // Automatically navigate to home page after successful login
         if (event === 'SIGNED_IN') {
           navigate('/');
         } else if (event === 'SIGNED_OUT') {
@@ -35,6 +37,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      
+      // If already logged in, navigate to home page
+      if (session?.user) {
+        navigate('/');
+      }
     });
 
     return () => subscription.unsubscribe();
