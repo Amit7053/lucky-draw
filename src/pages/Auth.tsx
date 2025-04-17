@@ -16,30 +16,34 @@ const Auth = () => {
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!phone || phone.trim() === '') {
+      toast({
+        title: "Error",
+        description: "Please enter a valid phone number",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // First try to sign in with OTP
+      const { error: otpError } = await supabase.auth.signInWithOtp({
         phone: phone,
-        password: phone // Using phone number as password for simplicity
       });
 
-      if (error) {
-        // If user doesn't exist, create one
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          phone: phone,
-          password: phone,
-        });
-
-        if (signUpError) throw signUpError;
+      if (otpError) {
+        throw otpError;
       }
 
       toast({
         title: "Success!",
-        description: "You have successfully logged in.",
+        description: "A verification code has been sent to your phone.",
       });
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || "Failed to login. Please try again.",
         variant: "destructive",
       });
     }
