@@ -102,10 +102,10 @@ const Index = () => {
             <Dice value={diceValue} isRolling={isRolling} />
           </div>
           
-          <div className="flex gap-4 relative z-10">
-            {/* Number selection circles column */}
-            <div className="flex flex-col gap-2 items-center">
-              <p className="text-white/80 text-xs mb-1">Pick</p>
+          <div className="w-full space-y-6 relative z-10">
+            {/* Number selection circles row */}
+            <div className="flex justify-center gap-3 items-center">
+              <p className="text-white/80 text-xs mr-2">Pick:</p>
               {[1, 2, 3, 4, 5, 6].map((number) => (
                 <button
                   key={number}
@@ -121,7 +121,7 @@ const Index = () => {
               ))}
             </div>
             
-            <div className="w-full max-w-xs space-y-4">
+            <div className="w-full max-w-xs mx-auto space-y-4">
               <Input
                 type="number"
                 min="1"
