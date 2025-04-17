@@ -7,7 +7,7 @@ import Dice from '@/components/Dice';
 import History from '@/components/History';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/contexts/WalletContext';
-import { LogOut, Circle1, Circle2, Circle3, Circle4, Circle5, Circle6 } from 'lucide-react';
+import { LogOut, Circle } from 'lucide-react';
 import WalletComponent from '@/components/Wallet';
 import Image from '@/components/ui/image';
 
@@ -50,19 +50,6 @@ const Index = () => {
       });
     }, 1000);
   }, [isRolling, toast, placeBet, betAmount, selectedNumber]);
-
-  // Number icon mapping for the circular buttons
-  const getNumberIcon = (number: number) => {
-    switch (number) {
-      case 1: return <Circle1 size={18} />;
-      case 2: return <Circle2 size={18} />;
-      case 3: return <Circle3 size={18} />;
-      case 4: return <Circle4 size={18} />;
-      case 5: return <Circle5 size={18} />;
-      case 6: return <Circle6 size={18} />;
-      default: return <Circle1 size={18} />;
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1A1F2C] to-[#403E43] p-4 relative overflow-hidden">
@@ -128,7 +115,8 @@ const Index = () => {
                       ? 'bg-gradient-to-br from-purple-600 to-blue-700 text-white shadow-lg scale-110' 
                       : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
                 >
-                  {getNumberIcon(number)}
+                  <Circle className="w-5 h-5" />
+                  <span className="absolute font-bold text-sm">{number}</span>
                 </button>
               ))}
             </div>
