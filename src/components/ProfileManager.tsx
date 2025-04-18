@@ -5,8 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, Wallet } from 'lucide-react';
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/contexts/WalletContext';
 import {
@@ -25,8 +24,6 @@ type Profile = {
 export default function ProfileManager() {
   const [profile, setProfile] = useState<Profile>({ name: '', aadhaar_number: '' });
   const [isEditing, setIsEditing] = useState(false);
-  const [amount, setAmount] = useState('');
-  const [isAddMoneyOpen, setIsAddMoneyOpen] = useState(false);
   const { toast } = useToast();
   const { signOut } = useAuth();
   const { balance, addMoney } = useWallet();
@@ -87,51 +84,8 @@ export default function ProfileManager() {
     setIsEditing(false);
   };
 
-  const handleAddMoney = async () => {
-    const parsedAmount = parseInt(amount);
-    if (isNaN(parsedAmount) || parsedAmount <= 0) return;
-    
-    await addMoney(parsedAmount);
-    setAmount('');
-    setIsAddMoneyOpen(false);
-  };
-
-  const handleSignOut = () => {
-    signOut();
-  };
-
   return (
-    <div className="flex items-center gap-4">
-      <AlertDialog open={isAddMoneyOpen} onOpenChange={setIsAddMoneyOpen}>
-        <AlertDialogTrigger asChild>
-          <Button variant="outline" className="gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20">
-            <Wallet className="h-4 w-4" />
-            ₹{balance.toFixed(2)}
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent className="bg-gradient-to-br from-[#232733] to-[#343540] text-white border-white/10">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">Add Money to Wallet</AlertDialogTitle>
-            <div className="py-4">
-              <div className="mb-4 text-sm text-gray-300">
-                Current Balance: ₹{balance.toFixed(2)}
-              </div>
-              <Input
-                type="number"
-                placeholder="Enter amount"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                min="1"
-                className="mb-4 bg-white/10 border-white/20 text-white"
-              />
-              <Button onClick={handleAddMoney} className="w-full bg-blue-600 hover:bg-blue-700">
-                Add Money
-              </Button>
-            </div>
-          </AlertDialogHeader>
-        </AlertDialogContent>
-      </AlertDialog>
-
+    <div className="flex items-center gap-2">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="ghost" className="p-0 h-12 w-12 rounded-full">
@@ -189,10 +143,6 @@ export default function ProfileManager() {
               <div className="space-y-2">
                 <Button onClick={() => setIsEditing(true)} className="w-full bg-blue-600 hover:bg-blue-700">
                   Edit Profile
-                </Button>
-                <Button onClick={handleSignOut} variant="destructive" className="w-full">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
                 </Button>
               </div>
             )}
