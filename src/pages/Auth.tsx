@@ -5,14 +5,51 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { Card } from '@/components/ui/card';
-import { Gamepad2, Smartphone } from 'lucide-react';
+import { Gamepad2, Smartphone, Mail, Lock } from 'lucide-react';
 import Image from '@/components/ui/image';
 
 const Auth = () => {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const { signInWithGoogle } = useAuth();
-  const { toast } = useToast();
+  const [isPhoneAuth, setIsPhoneAuth] = useState(false);
   const { supabase } = useAuth();
+  const { toast } = useToast();
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !password) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      const { error } = isSignUp 
+        ? await supabase.auth.signUp({ email, password })
+        : await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success!",
+        description: isSignUp 
+          ? "Account created successfully! Please check your email for verification." 
+          : "Logged in successfully!",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Authentication failed",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,14 +64,11 @@ const Auth = () => {
     }
     
     try {
-      // First try to sign in with OTP
       const { error: otpError } = await supabase.auth.signInWithOtp({
         phone: phone,
       });
 
-      if (otpError) {
-        throw otpError;
-      }
+      if (otpError) throw otpError;
 
       toast({
         title: "Success!",
@@ -43,7 +77,7 @@ const Auth = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to login. Please try again.",
+        description: error.message || "Failed to send OTP. Please try again.",
         variant: "destructive",
       });
     }
@@ -78,40 +112,75 @@ const Auth = () => {
           </h1>
           <p className="text-white/60 text-sm">Select beyond luck</p>
         </div>
-        
-        <Button 
-          onClick={signInWithGoogle}
-          className="w-full bg-white/10 text-white border border-white/10 hover:bg-white/20 group transition-all duration-300"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
-          Continue with Google
-        </Button>
 
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-white/10" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-black/30 backdrop-blur-sm text-white/50">Or continue with phone</span>
-          </div>
-        </div>
-
-        <form onSubmit={handlePhoneSubmit} className="space-y-4">
-          <div className="relative">
-            <Smartphone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/30 w-5 h-5" />
-            <Input
-              type="tel"
-              placeholder="Enter phone number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="pl-10 w-full bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
-            />
-          </div>
-          <Button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 transition-all duration-300">
-            <Gamepad2 className="w-5 h-5 mr-2" />
-            Login to Play
-          </Button>
-        </form>
+        {isPhoneAuth ? (
+          <form onSubmit={handlePhoneSubmit} className="space-y-4">
+            <div className="relative">
+              <Smartphone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/30 w-5 h-5" />
+              <Input
+                type="tel"
+                placeholder="Enter phone number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="pl-10 w-full bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
+              />
+            </div>
+            <Button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 transition-all duration-300">
+              <Gamepad2 className="w-5 h-5 mr-2" />
+              Send OTP Code
+            </Button>
+            <button
+              type="button"
+              onClick={() => setIsPhoneAuth(false)}
+              className="w-full text-white/60 hover:text-white text-sm mt-4"
+            >
+              Use Email Instead
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleEmailSubmit} className="space-y-4">
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/30 w-5 h-5" />
+              <Input
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10 w-full bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
+              />
+            </div>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/30 w-5 h-5" />
+              <Input
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pl-10 w-full bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-purple-500/50"
+              />
+            </div>
+            <Button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-medium py-2 px-4 transition-all duration-300">
+              <Gamepad2 className="w-5 h-5 mr-2" />
+              {isSignUp ? 'Sign Up' : 'Login'}
+            </Button>
+            <div className="flex justify-between items-center mt-4 text-sm">
+              <button
+                type="button"
+                onClick={() => setIsSignUp(!isSignUp)}
+                className="text-white/60 hover:text-white"
+              >
+                {isSignUp ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsPhoneAuth(true)}
+                className="text-white/60 hover:text-white"
+              >
+                Use Phone Instead
+              </button>
+            </div>
+          </form>
+        )}
         
         <div className="flex justify-center">
           <div className="w-10 h-1 bg-white/10 rounded-full"></div>
