@@ -29,21 +29,27 @@ export type Database = {
       }
       profiles: {
         Row: {
+          aadhaar_number: string | null
           created_at: string
           display_name: string | null
           id: string
+          name: string | null
           phone_number: string | null
         }
         Insert: {
+          aadhaar_number?: string | null
           created_at?: string
           display_name?: string | null
           id: string
+          name?: string | null
           phone_number?: string | null
         }
         Update: {
+          aadhaar_number?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
+          name?: string | null
           phone_number?: string | null
         }
         Relationships: []

@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import { useWallet } from '@/contexts/WalletContext';
 import { LogOut, Circle } from 'lucide-react';
 import WalletComponent from '@/components/Wallet';
 import Image from '@/components/ui/image';
+import ProfileManager from '@/components/ProfileManager';
 
 const Index = () => {
   const [diceValue, setDiceValue] = useState(1);
@@ -83,6 +83,7 @@ const Index = () => {
           </div>
           <div className="flex gap-2">
             <WalletComponent />
+            <ProfileManager />
             <Button 
               variant="ghost" 
               className="text-white/90 hover:bg-white/20 hover:text-white transition-colors"
