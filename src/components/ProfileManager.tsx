@@ -5,8 +5,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { UserCog, LogOut, Wallet } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogOut, Wallet } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/contexts/WalletContext';
 import {
@@ -101,7 +101,7 @@ export default function ProfileManager() {
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-4">
       <AlertDialog open={isAddMoneyOpen} onOpenChange={setIsAddMoneyOpen}>
         <AlertDialogTrigger asChild>
           <Button variant="outline" className="gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20">
@@ -134,20 +134,26 @@ export default function ProfileManager() {
 
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" className="gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20">
-            <Avatar className="h-6 w-6">
-              <AvatarFallback className="bg-white/10 text-white text-xs">
+          <Button variant="ghost" className="p-0 h-12 w-12 rounded-full">
+            <Avatar className="h-12 w-12">
+              <AvatarFallback className="bg-white/10 text-white">
                 {profile.name ? profile.name.charAt(0).toUpperCase() : 'U'}
               </AvatarFallback>
             </Avatar>
-            <span className="hidden sm:inline">{profile.name || 'Profile'}</span>
           </Button>
         </SheetTrigger>
         <SheetContent className="bg-gradient-to-br from-[#232733] to-[#343540] text-white border-white/10">
           <SheetHeader>
-            <SheetTitle className="text-white">Account Management</SheetTitle>
+            <SheetTitle className="text-white">Profile Settings</SheetTitle>
           </SheetHeader>
           <div className="py-6 space-y-6">
+            <div className="flex justify-center">
+              <Avatar className="h-20 w-20">
+                <AvatarFallback className="bg-white/10 text-white text-xl">
+                  {profile.name ? profile.name.charAt(0).toUpperCase() : 'U'}
+                </AvatarFallback>
+              </Avatar>
+            </div>
             <div className="space-y-2">
               <Label className="text-white/90">Name</Label>
               <Input
@@ -186,7 +192,7 @@ export default function ProfileManager() {
                 </Button>
                 <Button onClick={handleSignOut} variant="destructive" className="w-full">
                   <LogOut className="h-4 w-4 mr-2" />
-                  Logout
+                  Sign Out
                 </Button>
               </div>
             )}
