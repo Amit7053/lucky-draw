@@ -7,7 +7,7 @@ import Dice from '@/components/Dice';
 import History from '@/components/History';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/contexts/WalletContext';
-import { Circle } from 'lucide-react'; // Import Circle from lucide-react
+import { Circle, Coins } from 'lucide-react';
 import WalletComponent from '@/components/Wallet';
 import ProfileManager from '@/components/ProfileManager';
 
@@ -16,7 +16,7 @@ const Index = () => {
   const [isRolling, setIsRolling] = useState(false);
   const [history, setHistory] = useState<number[]>([]);
   const [betAmount, setBetAmount] = useState(5);
-  const [selectedNumber, setSelectedNumber] = useState("1");
+  const [selectedNumber, setSelectedNumber] = useState("H");
   const { toast } = useToast();
   const { signOut } = useAuth();
   const { placeBet, refreshBalance } = useWallet();
@@ -37,15 +37,15 @@ const Index = () => {
     if (!betPlaced) return;
     
     setIsRolling(true);
-    const newValue = parseInt(selectedNumber);
+    const result = selectedNumber === "H" ? 1 : 2; // 1 for Heads, 2 for Tails
     
     setTimeout(() => {
-      setDiceValue(newValue);
-      setHistory(prev => [newValue, ...prev].slice(0, 10));
+      setDiceValue(result);
+      setHistory(prev => [result, ...prev].slice(0, 10));
       setIsRolling(false);
       toast({
-        title: "🎲 New Roll!",
-        description: `You rolled a ${newValue}!`,
+        title: "🪙 Coin Flip!",
+        description: `It's ${result === 1 ? 'Heads' : 'Tails'}!`,
       });
     }, 1000);
   }, [isRolling, toast, placeBet, betAmount, selectedNumber]);
@@ -82,24 +82,27 @@ const Index = () => {
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5"></div>
           
           <div className="relative z-10">
-            <Dice value={diceValue} isRolling={isRolling} />
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-white text-4xl shadow-xl">
+              <Coins className="w-12 h-12" />
+            </div>
           </div>
           
           <div className="w-full space-y-6 relative z-10">
-            {/* Number selection circles row */}
             <div className="flex justify-center gap-3 items-center">
               <p className="text-white/80 text-xs mr-2">Pick:</p>
-              {[1, 2, 3, 4, 5, 6].map((number) => (
+              {[
+                { value: "H", label: "Heads" },
+                { value: "T", label: "Tails" }
+              ].map((option) => (
                 <button
-                  key={number}
-                  onClick={() => setSelectedNumber(number.toString())}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200
-                    ${selectedNumber === number.toString() 
+                  key={option.value}
+                  onClick={() => setSelectedNumber(option.value)}
+                  className={`w-20 h-10 rounded-full flex items-center justify-center transition-all duration-200
+                    ${selectedNumber === option.value 
                       ? 'bg-gradient-to-br from-purple-600 to-blue-700 text-white shadow-lg scale-110' 
                       : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
                 >
-                  <Circle className="w-5 h-5" />
-                  <span className="absolute font-bold text-sm">{number}</span>
+                  {option.label}
                 </button>
               ))}
             </div>
