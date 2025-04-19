@@ -6,9 +6,7 @@ import Dice from '@/components/Dice';
 import History from '@/components/History';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/contexts/WalletContext';
-import { LogOut, Circle } from 'lucide-react';
 import WalletComponent from '@/components/Wallet';
-import Image from '@/components/ui/image';
 import ProfileManager from '@/components/ProfileManager';
 
 const Index = () => {
@@ -21,7 +19,6 @@ const Index = () => {
   const { signOut } = useAuth();
   const { placeBet, refreshBalance } = useWallet();
   
-  // Ensure wallet is up to date
   useEffect(() => {
     refreshBalance();
   }, [refreshBalance]);
@@ -72,26 +69,9 @@ const Index = () => {
       
       <div className="max-w-md mx-auto pt-6 relative z-10">
         <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center">
-            <div className="w-16 h-16 rounded-full overflow-hidden shadow-lg border-2 border-white/20">
-              <Image 
-                src="/lovable-uploads/7df5a136-61a4-44f2-9ee5-f2450d605dac.png" 
-                alt="Picker Logo" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
+          <WalletComponent />
           <div className="flex gap-2">
-            <WalletComponent />
             <ProfileManager />
-            <Button 
-              variant="ghost" 
-              className="text-white/90 hover:bg-white/20 hover:text-white transition-colors"
-              onClick={handleSignOut}
-            >
-              <LogOut className="w-5 h-5 mr-2" />
-              Logout
-            </Button>
           </div>
         </div>
         

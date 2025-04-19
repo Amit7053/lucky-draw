@@ -8,13 +8,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/contexts/WalletContext';
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { LogOut } from 'lucide-react';
 
 type Profile = {
   name: string | null;
@@ -84,6 +78,10 @@ export default function ProfileManager() {
     setIsEditing(false);
   };
 
+  const handleSignOut = () => {
+    signOut();
+  };
+
   return (
     <div className="flex items-center gap-2">
       <Sheet>
@@ -143,6 +141,10 @@ export default function ProfileManager() {
               <div className="space-y-2">
                 <Button onClick={() => setIsEditing(true)} className="w-full bg-blue-600 hover:bg-blue-700">
                   Edit Profile
+                </Button>
+                <Button onClick={handleSignOut} variant="destructive" className="w-full">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
                 </Button>
               </div>
             )}
