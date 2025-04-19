@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import Dice from '@/components/Dice';
 import History from '@/components/History';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/contexts/WalletContext';
+import { Circle } from 'lucide-react'; // Import Circle from lucide-react
 import WalletComponent from '@/components/Wallet';
 import ProfileManager from '@/components/ProfileManager';
 
