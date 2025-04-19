@@ -29,28 +29,34 @@ export type Database = {
       }
       profiles: {
         Row: {
+          aadhaar_image: string | null
           aadhaar_number: string | null
           created_at: string
           display_name: string | null
           id: string
           name: string | null
           phone_number: string | null
+          profile_image: string | null
         }
         Insert: {
+          aadhaar_image?: string | null
           aadhaar_number?: string | null
           created_at?: string
           display_name?: string | null
           id: string
           name?: string | null
           phone_number?: string | null
+          profile_image?: string | null
         }
         Update: {
+          aadhaar_image?: string | null
           aadhaar_number?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
           name?: string | null
           phone_number?: string | null
+          profile_image?: string | null
         }
         Relationships: []
       }
