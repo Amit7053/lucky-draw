@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/contexts/WalletContext';
-import { LogOut } from 'lucide-react';
+import { LogOut, Shield } from 'lucide-react';
 
 type Profile = {
   name: string | null;
@@ -86,63 +87,69 @@ export default function ProfileManager() {
     <div className="flex items-center gap-2">
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="ghost" className="p-0 h-12 w-12 rounded-full">
-            <Avatar className="h-12 w-12">
-              <AvatarFallback className="bg-white/10 text-white">
+          <Button variant="ghost" className="p-0 h-12 w-12 rounded-full relative group">
+            <Avatar className="h-12 w-12 transform transition-all duration-200 group-hover:scale-110">
+              <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-700 text-white border-2 border-yellow-400">
                 {profile.name ? profile.name.charAt(0).toUpperCase() : 'U'}
               </AvatarFallback>
             </Avatar>
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center">
+              <Shield className="w-3 h-3 text-purple-700" />
+            </div>
           </Button>
         </SheetTrigger>
-        <SheetContent className="bg-gradient-to-br from-[#232733] to-[#343540] text-white border-white/10">
+        <SheetContent className="bg-gradient-to-br from-[#1A1F2C] to-[#403E43] text-white border-white/10">
           <SheetHeader>
-            <SheetTitle className="text-white">Profile Settings</SheetTitle>
+            <SheetTitle className="text-white flex items-center gap-2">
+              <Shield className="w-5 h-5 text-yellow-400" />
+              Player Profile
+            </SheetTitle>
           </SheetHeader>
           <div className="py-6 space-y-6">
             <div className="flex justify-center">
-              <Avatar className="h-20 w-20">
-                <AvatarFallback className="bg-white/10 text-white text-xl">
+              <Avatar className="h-24 w-24 transform hover:scale-105 transition-all duration-200">
+                <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-700 text-white text-2xl border-4 border-yellow-400">
                   {profile.name ? profile.name.charAt(0).toUpperCase() : 'U'}
                 </AvatarFallback>
               </Avatar>
             </div>
             <div className="space-y-2">
-              <Label className="text-white/90">Name</Label>
+              <Label className="text-yellow-400">Player Name</Label>
               <Input
                 type="text"
                 value={profile.name || ''}
                 onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                 disabled={!isEditing}
-                className="bg-white/10 border-white/20 text-white"
+                className="bg-white/10 border-yellow-400/50 text-white focus:border-yellow-400"
                 placeholder="Enter your name"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-white/90">Aadhaar Number</Label>
+              <Label className="text-yellow-400">Aadhaar Number</Label>
               <Input
                 type="text"
                 value={profile.aadhaar_number || ''}
                 onChange={(e) => setProfile({ ...profile, aadhaar_number: e.target.value })}
                 disabled={!isEditing}
-                className="bg-white/10 border-white/20 text-white"
+                className="bg-white/10 border-yellow-400/50 text-white focus:border-yellow-400"
                 placeholder="Enter your Aadhaar number"
               />
             </div>
             {isEditing ? (
               <div className="flex gap-2">
-                <Button onClick={handleSave} className="flex-1 bg-green-600 hover:bg-green-700">
+                <Button onClick={handleSave} className="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-purple-900 font-bold">
                   Save Changes
                 </Button>
-                <Button onClick={() => setIsEditing(false)} variant="outline" className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20">
+                <Button onClick={() => setIsEditing(false)} variant="outline" className="flex-1 border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/10">
                   Cancel
                 </Button>
               </div>
             ) : (
               <div className="space-y-2">
-                <Button onClick={() => setIsEditing(true)} className="w-full bg-blue-600 hover:bg-blue-700">
+                <Button onClick={() => setIsEditing(true)} className="w-full bg-gradient-to-r from-purple-600 to-blue-700 hover:from-purple-700 hover:to-blue-800 text-white">
                   Edit Profile
                 </Button>
-                <Button onClick={handleSignOut} variant="destructive" className="w-full">
+                <Button onClick={handleSignOut} variant="destructive" className="w-full bg-red-600 hover:bg-red-700">
                   <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
                 </Button>
