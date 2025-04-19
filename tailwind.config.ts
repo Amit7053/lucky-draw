@@ -1,7 +1,6 @@
+import { Config } from 'tailwindcss';
 
-import type { Config } from "tailwindcss";
-
-export default {
+const config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -64,11 +63,18 @@ export default {
           "0%": { transform: "rotateX(0deg) rotateY(0deg)" },
           "100%": { transform: "rotateX(720deg) rotateY(720deg)" },
         },
+        flip: {
+          '0%, 100%': { transform: 'rotateY(0deg)' },
+          '50%': { transform: 'rotateY(180deg)' }
+        }
       },
       animation: {
         "dice-roll": "dice-roll 1s ease-out",
+        flip: 'flip 1s ease-in-out'
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
+export default config;

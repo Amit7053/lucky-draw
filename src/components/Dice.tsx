@@ -1,32 +1,22 @@
 
 import React from 'react';
-import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6 } from 'lucide-react';
+import { Coins } from 'lucide-react';
 
-interface DiceProps {
+interface CoinProps {
   value: number;
   isRolling: boolean;
 }
 
-const Dice: React.FC<DiceProps> = ({ value, isRolling }) => {
-  const getDiceIcon = () => {
-    const props = { size: 60, className: "text-blue-100" };
-    switch (value) {
-      case 1: return <Dice1 {...props} />;
-      case 2: return <Dice2 {...props} />;
-      case 3: return <Dice3 {...props} />;
-      case 4: return <Dice4 {...props} />;
-      case 5: return <Dice5 {...props} />;
-      case 6: return <Dice6 {...props} />;
-      default: return <Dice1 {...props} />;
-    }
-  };
-
+const Coin: React.FC<CoinProps> = ({ value, isRolling }) => {
   return (
-    <div className={`p-4 rounded-lg bg-gradient-to-br from-purple-600 to-blue-800 backdrop-blur-sm border border-blue-400/30 shadow-xl
-      ${isRolling ? 'animate-dice-roll' : 'transition-transform hover:scale-105'}`}>
-      {getDiceIcon()}
+    <div className={`relative p-4 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 backdrop-blur-sm border border-yellow-400/30 shadow-xl w-24 h-24 flex items-center justify-center
+      ${isRolling ? 'animate-flip' : 'transition-transform hover:scale-105'}`}>
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 opacity-50 blur-sm" />
+      <div className="relative z-10 text-4xl font-bold text-white">
+        {value === 1 ? 'H' : 'T'}
+      </div>
     </div>
   );
 };
 
-export default Dice;
+export default Coin;

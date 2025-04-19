@@ -1,13 +1,12 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Dice from '@/components/Dice';
+import Coin from '@/components/Dice';
 import History from '@/components/History';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWallet } from '@/contexts/WalletContext';
-import { Circle, Coins } from 'lucide-react';
+import { Coins } from 'lucide-react';
 import WalletComponent from '@/components/Wallet';
 import ProfileManager from '@/components/ProfileManager';
 
@@ -52,7 +51,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1A1F2C] to-[#403E43] p-4 relative overflow-hidden">
-      {/* Gaming background images */}
       <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
@@ -60,7 +58,6 @@ const Index = () => {
         <div className="absolute -bottom-20 left-1/3 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
       </div>
       
-      {/* Gaming circuit lines */}
       <div className="absolute inset-0" style={{
         backgroundImage: `
           linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
@@ -78,13 +75,10 @@ const Index = () => {
         </div>
         
         <div className="flex flex-col items-center gap-8 glass p-8 rounded-2xl backdrop-blur-lg border border-white/10 relative">
-          {/* Glowing effect */}
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-indigo-500/5"></div>
           
           <div className="relative z-10">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-white text-4xl shadow-xl">
-              <Coins className="w-12 h-12" />
-            </div>
+            <Coin value={diceValue} isRolling={isRolling} />
           </div>
           
           <div className="w-full space-y-6 relative z-10">
@@ -99,7 +93,7 @@ const Index = () => {
                   onClick={() => setSelectedNumber(option.value)}
                   className={`w-20 h-10 rounded-full flex items-center justify-center transition-all duration-200
                     ${selectedNumber === option.value 
-                      ? 'bg-gradient-to-br from-purple-600 to-blue-700 text-white shadow-lg scale-110' 
+                      ? 'bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-lg scale-110' 
                       : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
                 >
                   {option.label}
