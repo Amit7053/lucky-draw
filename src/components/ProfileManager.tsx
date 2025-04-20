@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,7 +74,6 @@ export default function ProfileManager() {
       return null;
     }
 
-    // Update the profile in the database with the new image path
     const { error: updateError } = await supabase
       .from('profiles')
       .update({
@@ -139,6 +137,8 @@ export default function ProfileManager() {
         ...prev,
         [type === 'profile' ? 'profile_image' : 'aadhaar_image']: fileName
       }));
+      
+      fetchProfile();
     }
   };
 
@@ -148,12 +148,15 @@ export default function ProfileManager() {
         <SheetTrigger asChild>
           <Button variant="ghost" className="p-0 h-12 w-12 rounded-full relative group bg-gradient-to-br from-purple-600/10 to-blue-600/10 border border-purple-500/20">
             <Avatar className="h-12 w-12 transform transition-all duration-200 group-hover:scale-110">
-              <AvatarImage src={profile.profile_image ? `https://vjkprdnocgjyxsbkvaad.supabase.co/storage/v1/object/public/user_documents/${profile.profile_image}` : undefined} />
-              <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-700 text-white border-2 border-yellow-400">
+              <AvatarImage 
+                src={profile.profile_image ? `https://vjkprdnocgjyxsbkvaad.supabase.co/storage/v1/object/public/user_documents/${profile.profile_image}` : undefined} 
+                alt="Profile"
+              />
+              <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-700 text-white border-2 border-purple-400">
                 {profile.name ? profile.name.charAt(0).toUpperCase() : 'U'}
               </AvatarFallback>
             </Avatar>
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg">
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-purple-400 rounded-full flex items-center justify-center shadow-lg">
               <Shield className="w-3 h-3 text-purple-700" />
             </div>
           </Button>
@@ -168,13 +171,16 @@ export default function ProfileManager() {
           <div className="py-6 space-y-6">
             <div className="flex justify-center">
               <div className="relative group">
-                <Avatar className="h-24 w-24 transform group-hover:scale-105 transition-all duration-200 border-4 border-yellow-400/50 group-hover:border-yellow-400">
-                  <AvatarImage src={profile.profile_image ? `https://vjkprdnocgjyxsbkvaad.supabase.co/storage/v1/object/public/user_documents/${profile.profile_image}` : undefined} />
+                <Avatar className="h-24 w-24 transform group-hover:scale-105 transition-all duration-200 border-4 border-purple-400/50 group-hover:border-purple-400">
+                  <AvatarImage 
+                    src={profile.profile_image ? `https://vjkprdnocgjyxsbkvaad.supabase.co/storage/v1/object/public/user_documents/${profile.profile_image}` : undefined}
+                    alt="Profile"
+                  />
                   <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-700 text-white text-2xl">
                     {profile.name ? profile.name.charAt(0).toUpperCase() : 'U'}
                   </AvatarFallback>
                 </Avatar>
-                <label className="absolute bottom-0 right-0 p-1 bg-yellow-400 rounded-full cursor-pointer transform transition-transform hover:scale-110 shadow-lg">
+                <label className="absolute bottom-0 right-0 p-1 bg-purple-400 rounded-full cursor-pointer transform transition-transform hover:scale-110 shadow-lg">
                   <input
                     type="file"
                     accept="image/*"
