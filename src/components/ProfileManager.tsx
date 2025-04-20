@@ -75,6 +75,28 @@ export default function ProfileManager() {
       return null;
     }
 
+    // Update the profile in the database with the new image path
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({
+        [`${type}_image`]: fileName
+      })
+      .eq('id', user.id);
+
+    if (updateError) {
+      toast({
+        title: "Error",
+        description: `Failed to update profile with ${type} image`,
+        variant: "destructive",
+      });
+      return null;
+    }
+
+    toast({
+      title: "Success",
+      description: `${type.charAt(0).toUpperCase() + type.slice(1)} image uploaded successfully`,
+    });
+
     return fileName;
   };
 
