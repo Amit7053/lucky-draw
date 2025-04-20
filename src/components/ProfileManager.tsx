@@ -1,20 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from '@/contexts/AuthContext';
-import { Shield, LogOut, Upload } from 'lucide-react';
-
-type Profile = {
-  name: string | null;
-  aadhaar_number: string | null;
-  profile_image: string | null;
-  aadhaar_image: string | null;
-};
+import { LogOut, Shield, Upload } from 'lucide-react';
+import { ProfileAvatar, ProfileAvatarButton } from './profile/ProfileAvatar';
+import { ProfileForm } from './profile/ProfileForm';
+import type { Profile } from "@/types/profile";
 
 export default function ProfileManager() {
   const [profile, setProfile] = useState<Profile>({ 
@@ -146,20 +139,7 @@ export default function ProfileManager() {
     <div className="flex items-center gap-2">
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="ghost" className="p-0 h-12 w-12 rounded-full relative group bg-gradient-to-br from-purple-600/10 to-blue-600/10 border border-purple-500/20">
-            <Avatar className="h-12 w-12 transform transition-all duration-200 group-hover:scale-110">
-              <AvatarImage 
-                src={profile.profile_image ? `https://vjkprdnocgjyxsbkvaad.supabase.co/storage/v1/object/public/user_documents/${profile.profile_image}` : undefined} 
-                alt="Profile"
-              />
-              <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-700 text-white border-2 border-purple-400">
-                {profile.name ? profile.name.charAt(0).toUpperCase() : 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-purple-400 rounded-full flex items-center justify-center shadow-lg">
-              <Shield className="w-3 h-3 text-purple-700" />
-            </div>
-          </Button>
+          <ProfileAvatarButton profile={profile} />
         </SheetTrigger>
         <SheetContent className="bg-gradient-to-br from-[#1A1F2C] to-[#403E43] text-white border-white/10">
           <SheetHeader>
@@ -171,15 +151,7 @@ export default function ProfileManager() {
           <div className="py-6 space-y-6">
             <div className="flex justify-center">
               <div className="relative group">
-                <Avatar className="h-24 w-24 transform group-hover:scale-105 transition-all duration-200 border-4 border-purple-400/50 group-hover:border-purple-400">
-                  <AvatarImage 
-                    src={profile.profile_image ? `https://vjkprdnocgjyxsbkvaad.supabase.co/storage/v1/object/public/user_documents/${profile.profile_image}` : undefined}
-                    alt="Profile"
-                  />
-                  <AvatarFallback className="bg-gradient-to-br from-purple-600 to-blue-700 text-white text-2xl">
-                    {profile.name ? profile.name.charAt(0).toUpperCase() : 'U'}
-                  </AvatarFallback>
-                </Avatar>
+                <ProfileAvatar profile={profile} size="lg" />
                 <label className="absolute bottom-0 right-0 p-1 bg-purple-400 rounded-full cursor-pointer transform transition-transform hover:scale-110 shadow-lg">
                   <input
                     type="file"
@@ -191,55 +163,17 @@ export default function ProfileManager() {
                 </label>
               </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-yellow-400">Player Name</Label>
-              <Input
-                type="text"
-                value={profile.name || ''}
-                onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                disabled={!isEditing}
-                className="bg-white/10 border-yellow-400/50 text-white focus:border-yellow-400"
-                placeholder="Enter your name"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-yellow-400">Aadhaar Number</Label>
-              <Input
-                type="text"
-                value={profile.aadhaar_number || ''}
-                onChange={(e) => setProfile({ ...profile, aadhaar_number: e.target.value })}
-                disabled={!isEditing}
-                className="bg-white/10 border-yellow-400/50 text-white focus:border-yellow-400"
-                placeholder="Enter your Aadhaar number"
-              />
-              {isEditing && (
-                <div className="mt-2">
-                  <Label className="text-yellow-400">Upload Aadhaar Card Image</Label>
-                  <label className="flex items-center gap-2 p-2 mt-1 border border-yellow-400/50 rounded cursor-pointer hover:bg-yellow-400/10">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => handleImageUpload(e, 'aadhaar')}
-                    />
-                    <Upload className="w-4 h-4 text-yellow-400" />
-                    <span className="text-sm text-yellow-400">
-                      {profile.aadhaar_image ? 'Change Aadhaar Image' : 'Upload Aadhaar Image'}
-                    </span>
-                  </label>
-                </div>
-              )}
-            </div>
-            {isEditing ? (
-              <div className="flex gap-2">
-                <Button onClick={handleSave} className="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-purple-900 font-bold">
-                  Save Changes
-                </Button>
-                <Button onClick={() => setIsEditing(false)} variant="outline" className="flex-1 border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/10">
-                  Cancel
-                </Button>
-              </div>
-            ) : (
+            
+            <ProfileForm 
+              profile={profile}
+              isEditing={isEditing}
+              onProfileChange={(updates) => setProfile(prev => ({ ...prev, ...updates }))}
+              onSave={handleSave}
+              onCancel={() => setIsEditing(false)}
+              onImageUpload={handleImageUpload}
+            />
+
+            {!isEditing && (
               <div className="space-y-2">
                 <Button onClick={() => setIsEditing(true)} className="w-full bg-gradient-to-r from-purple-600 to-blue-700 hover:from-purple-700 hover:to-blue-800 text-white">
                   Edit Profile
