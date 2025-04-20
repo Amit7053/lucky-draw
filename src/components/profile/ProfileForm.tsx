@@ -12,6 +12,7 @@ interface ProfileFormProps {
   onSave: () => void;
   onCancel: () => void;
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>, type: 'profile' | 'aadhaar') => void;
+  onEditToggle: () => void;
 }
 
 export function ProfileForm({ 
@@ -20,7 +21,8 @@ export function ProfileForm({
   onProfileChange, 
   onSave, 
   onCancel,
-  onImageUpload 
+  onImageUpload,
+  onEditToggle
 }: ProfileFormProps) {
   return (
     <div className="space-y-6">
@@ -59,7 +61,7 @@ export function ProfileForm({
       {!isEditing && (
         <div className="space-y-2">
           <Button 
-            onClick={() => onProfileChange({ isEditing: true })} 
+            onClick={onEditToggle} 
             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
           >
             Edit Profile

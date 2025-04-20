@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -120,6 +121,13 @@ export default function ProfileManager() {
     setIsEditing(false);
   };
 
+  const handleProfileChange = (updates: Partial<Profile>) => {
+    setProfile(prev => ({
+      ...prev,
+      ...updates
+    }));
+  };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'profile' | 'aadhaar') => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -133,6 +141,10 @@ export default function ProfileManager() {
       
       fetchProfile();
     }
+  };
+
+  const toggleEditing = () => {
+    setIsEditing(prev => !prev);
   };
 
   return (
@@ -167,22 +179,18 @@ export default function ProfileManager() {
             <ProfileForm 
               profile={profile}
               isEditing={isEditing}
-              onProfileChange={(updates) => setProfile(prev => ({ ...prev, ...updates }))}
+              onProfileChange={handleProfileChange}
               onSave={handleSave}
               onCancel={() => setIsEditing(false)}
               onImageUpload={handleImageUpload}
+              onEditToggle={toggleEditing}
             />
 
             {!isEditing && (
-              <div className="space-y-2">
-                <Button onClick={() => setIsEditing(true)} className="w-full bg-gradient-to-r from-purple-600 to-blue-700 hover:from-purple-700 hover:to-blue-800 text-white">
-                  Edit Profile
-                </Button>
-                <Button onClick={signOut} variant="destructive" className="w-full bg-red-600 hover:bg-red-700">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
-                </Button>
-              </div>
+              <Button onClick={signOut} variant="destructive" className="w-full bg-red-600 hover:bg-red-700">
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
             )}
           </div>
         </SheetContent>
