@@ -48,7 +48,8 @@ export function ProfileForm({
           placeholder="Enter your Aadhaar number"
         />
       </div>
-      {isEditing && (
+      
+      {isEditing ? (
         <div className="flex gap-2">
           <Button onClick={onSave} className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
             Save Changes
@@ -57,16 +58,13 @@ export function ProfileForm({
             Cancel
           </Button>
         </div>
-      )}
-      {!isEditing && (
-        <div className="space-y-2">
-          <Button 
-            onClick={onEditToggle} 
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
-          >
-            Edit Profile
-          </Button>
-        </div>
+      ) : (
+        <Button 
+          onClick={onEditToggle} 
+          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+        >
+          Edit Profile
+        </Button>
       )}
     </div>
   );
