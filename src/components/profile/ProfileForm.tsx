@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload } from 'lucide-react';
+import { Upload, LogOut } from 'lucide-react';
 import type { Profile } from "@/types/profile";
 
 interface ProfileFormProps {
@@ -31,7 +31,7 @@ export function ProfileForm({
           value={profile.name || ''}
           onChange={(e) => onProfileChange({ name: e.target.value })}
           disabled={!isEditing}
-          className="bg-white/10 border-yellow-400/50 text-white focus:border-yellow-400"
+          className="bg-gray-800/50 border-gray-700 text-white focus:border-yellow-400 placeholder:text-gray-500"
           placeholder="Enter your name"
         />
       </div>
@@ -42,34 +42,27 @@ export function ProfileForm({
           value={profile.aadhaar_number || ''}
           onChange={(e) => onProfileChange({ aadhaar_number: e.target.value })}
           disabled={!isEditing}
-          className="bg-white/10 border-yellow-400/50 text-white focus:border-yellow-400"
+          className="bg-gray-800/50 border-gray-700 text-white focus:border-yellow-400 placeholder:text-gray-500"
           placeholder="Enter your Aadhaar number"
         />
-        {isEditing && (
-          <div className="mt-2">
-            <Label className="text-yellow-400">Upload Aadhaar Card Image</Label>
-            <label className="flex items-center gap-2 p-2 mt-1 border border-yellow-400/50 rounded cursor-pointer hover:bg-yellow-400/10">
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => onImageUpload(e, 'aadhaar')}
-              />
-              <Upload className="w-4 h-4 text-yellow-400" />
-              <span className="text-sm text-yellow-400">
-                {profile.aadhaar_image ? 'Change Aadhaar Image' : 'Upload Aadhaar Image'}
-              </span>
-            </label>
-          </div>
-        )}
       </div>
       {isEditing && (
         <div className="flex gap-2">
-          <Button onClick={onSave} className="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-purple-900 font-bold">
+          <Button onClick={onSave} className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
             Save Changes
           </Button>
-          <Button onClick={onCancel} variant="outline" className="flex-1 border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/10">
+          <Button onClick={onCancel} variant="outline" className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800">
             Cancel
+          </Button>
+        </div>
+      )}
+      {!isEditing && (
+        <div className="space-y-2">
+          <Button 
+            onClick={() => onProfileChange({ isEditing: true })} 
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+          >
+            Edit Profile
           </Button>
         </div>
       )}
